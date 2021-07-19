@@ -1,0 +1,19 @@
+# Template file for 'drumgizmo'
+pkgname=drumgizmo
+version=0.9.19
+revision=1
+build_style=gnu-configure
+configure_args="--prefix=/usr --enable-lv2 --disable-cli"
+hostmakedepends="autoconf automake libtool pkg-config gettext"
+makedepends="alsa-lib-devel jack-devel lv2 libX11-devel libsndfile-devel
+ zita-resampler-devel libXext-devel"
+short_desc="Multichannel, multilayered, drum plugin and stand-alone application"
+maintainer="biopsin <biopsin@teknik.io>"
+license="GPL-2.0-or-later"
+homepage="https://drumgizmo.org/wiki/doku.php"
+distfiles="http://www.drumgizmo.org/releases/${pkgname}-${version}/${pkgname}-${version}.tar.gz"
+checksum=7426f38b58fbb82d3eada60c204d74e6c5de31ef424c017e3f890117e146a2a3
+
+pre_configure() {
+	autoreconf -fi
+}
