@@ -1,0 +1,22 @@
+# Template file for 'libspecbleach'
+pkgname=libspecbleach
+version=0.1.6
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+makedepends="fftw-devel"
+short_desc="C library for audio noise reduction and other spectral effects"
+maintainer="biopsin <biopsin@teknik.io>"
+license="LGPL-2.1-or-later"
+homepage="https://github.com/lucianodato/libspecbleach"
+distfiles="$homepage/archive/v$version.tar.gz"
+checksum=0b714fc0d937eaa38c0b0f1f2a41ac344210c3ca6fe48a7ff198fd49db99029f
+
+libspecbleach-devel_package() {
+	depends="${sourcepkg}>=${version}_${revision}"
+	short_desc+=" - development files"
+	pkg_install() {
+		vmove usr/include
+		vmove usr/lib/pkgconfig
+	}
+}
