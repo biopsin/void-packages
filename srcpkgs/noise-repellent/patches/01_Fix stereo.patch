@@ -1,0 +1,45 @@
+From d34cd2e7443361b1aa51484019345b95dc23b6e6 Mon Sep 17 00:00:00 2001
+From: Orivej Desh <orivej@gmx.fr>
+Date: Thu, 12 Oct 2023 18:51:35 +0000
+Subject: [PATCH] Fix stereo state restoration
+
+---
+ plugins/nrepellent-adaptive.c | 2 +-
+ plugins/nrepellent.c          | 4 ++--
+ 2 files changed, 3 insertions(+), 3 deletions(-)
+
+diff --git a/plugins/nrepellent-adaptive.c b/plugins/nrepellent-adaptive.c
+index db3cb7c..52ea357 100644
+--- a/plugins/nrepellent-adaptive.c
++++ b/plugins/nrepellent-adaptive.c
+@@ -38,7 +38,7 @@ typedef struct URIs {
+ 
+ static void map_uris(LV2_URID_Map *map, URIs *uris, const char *uri) {
+   uris->plugin =
+-      strcmp(uri, NOISEREPELLENT_ADAPTIVE_URI)
++      strcmp(uri, NOISEREPELLENT_ADAPTIVE_URI) == 0
+           ? map->map(map->handle, NOISEREPELLENT_ADAPTIVE_URI)
+           : map->map(map->handle, NOISEREPELLENT_ADAPTIVE_STEREO_URI);
+ }
+diff --git a/plugins/nrepellent.c b/plugins/nrepellent.c
+index b684e39..32e3213 100644
+--- a/plugins/nrepellent.c
++++ b/plugins/nrepellent.c
+@@ -51,7 +51,7 @@ typedef struct State {
+ } State;
+ 
+ static void map_uris(LV2_URID_Map *map, URIs *uris, const char *uri) {
+-  uris->plugin = strcmp(uri, NOISEREPELLENT_URI)
++  uris->plugin = strcmp(uri, NOISEREPELLENT_URI) == 0
+                      ? map->map(map->handle, NOISEREPELLENT_URI)
+                      : map->map(map->handle, NOISEREPELLENT_STEREO_URI);
+   uris->atom_Int = map->map(map->handle, LV2_ATOM__Int);
+@@ -61,7 +61,7 @@ static void map_uris(LV2_URID_Map *map, URIs *uris, const char *uri) {
+ }
+ 
+ static void map_state(LV2_URID_Map *map, State *state, const char *uri) {
+-  if (!strcmp(uri, NOISEREPELLENT_URI)) {
++  if (strcmp(uri, NOISEREPELLENT_STEREO_URI) == 0) {
+     state->property_noise_profile_1 =
+         map->map(map->handle, NOISEREPELLENT_STEREO_URI "#noiseprofile");
+     state->property_noise_profile_2 =
