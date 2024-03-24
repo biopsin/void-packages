@@ -10,7 +10,7 @@ makedepends="aalib-devel alsa-lib-devel babl-devel dbus-glib-devel gegl-devel
  ghostscript-devel jasper-devel lcms2-devel libXcursor-devel libXpm-devel
  libgexiv2-devel libgudev-devel libmng-devel libmypaint-devel
  libopenexr-devel librsvg-devel libwmf-devel mypaint-brushes1
- poppler-glib-devel glib-networking libwebp-devel
+ poppler-glib-devel libwebp-devel
  libheif-devel libopenjpeg2-devel x265-devel gtk+-devel"
 depends="desktop-file-utils hicolor-icon-theme iso-codes mypaint-brushes1"
 short_desc="GNU image manipulation program"
@@ -28,6 +28,9 @@ pre_configure() {
 	NOCONFIGURE=1 autoreconf -fi
 	# don't allow configure to set DATADIRNAME=lib
 	vsed -i 's/DATADIRNAME=lib/DATADIRNAME=share/' configure
+
+	# disable webkit
+	patch -Np1 -i ${FILESDIR}/no-webkit.patch
 }
 
 libgimp_package() {

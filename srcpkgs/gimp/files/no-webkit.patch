@@ -1,0 +1,22 @@
+--- a/configure	2021-03-28 23:55:24.000000000 +0200
++++ b/configure	2021-04-30 13:46:46.518461083 +0200
+@@ -24279,8 +24279,9 @@
+ fi
+ fi
+ 
+-{ $as_echo "$as_me:${as_lineno-$LINENO}: checking for glib-networking (GIO TLS implementation)" >&5
+-$as_echo_n "checking for glib-networking (GIO TLS implementation)... " >&6; }
++if test "x$with_webkit" != xno; then
++{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for glib-networking (GIO TLS implementation)" >&5
++printf %s "checking for glib-networking (GIO TLS implementation)... " >&6; }
+ gimp_save_CFLAGS="$CFLAGS"
+ gimp_save_LIBS="$LIBS"
+ CFLAGS="$CFLAGS $GIO_CFLAGS"
+@@ -24331,6 +24332,7 @@
+          HTTPS is becoming the expected standard and should not be considered
+          optional anymore."
+ fi
++fi
+ 
+ # AM_PATH_GLIB_2_0 already fills in the variable GLIB_COMPILE_RESOURCES.
+ # Unfortunately it looks it up using $PKG_CONFIG, which search in
