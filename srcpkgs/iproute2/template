@@ -36,8 +36,9 @@ post_install() {
 iproute2-tc-ipt_package() {
 	short_desc+=" - tc(8) IPtables support"
 	pkg_install() {
-		# m_ipt.so is symlinked to m_xt.so
-		vmove usr/lib/tc/m_ipt.so
-		vmove usr/lib/tc/m_xt.so
+		vmove usr/bin/tc
+		vmove usr/lib/tc
+		vmove "usr/share/man/man8/tc*"
+
 	}
 }
