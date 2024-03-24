@@ -28,6 +28,9 @@ pre_configure() {
 	NOCONFIGURE=1 autoreconf -fi
 	# don't allow configure to set DATADIRNAME=lib
 	vsed -i 's/DATADIRNAME=lib/DATADIRNAME=share/' configure
+
+	# disable webkit
+	patch -Np1 -i ${FILESDIR}/no-webkit.patch
 }
 
 libgimp_package() {
