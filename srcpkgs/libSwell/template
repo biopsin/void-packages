@@ -1,0 +1,36 @@
+# Template file for 'libSwell'
+pkgname=libSwell
+version=231228
+revision=1
+_commit="30ac15c6845d2964440e684db2147330521ab2b6"
+wrksrc="WDL-${_commit}"
+make_build_args="GDK2=1"
+hostmakedepends="pkg-config"
+makedepends="gtk+-devel libXi-devel glew-devel"
+short_desc="Set of simple C++ classes"
+maintainer="biopsin <biopsin@tuta.io>"
+license="GPL-2-or-later"
+homepage="https://github.com/justinfrankel/WDL"
+distfiles="${homepage}/archive/${_commit}.zip"
+checksum=369358caa0c1814f77080519885949e87bb47f64aa53c0ed04afa61f7cfce5c9
+
+post_configure() {
+	# patch this gtk2 breakage for now
+	rm ${wrksrc}/WDL/swell/gtkimcontextsimpleseqs.h
+}
+
+do_build() {
+    cd ${wrksrc}/WDL/swell
+	make ${make_build_args}
+    # Create the default colortheme
+    make ${make_build_args} libSwell.colortheme
+}
+
+do_install() {
+    vmkdir usr/lib/swell
+    cp ${wrksrc}/WDL/swell/{libSwell.so,libSwell.colortheme} ${DESTDIR}/usr/lib/swell
+
+	vmkdir usr/libexec/reaper
+	ln -sf /usr/lib/swell/libSwell.so ${DESTDIR}/usr/libexec/reaper
+	ln -sf /usr/lib/swell/libSwell.colortheme ${DESTDIR}/usr/libexec/reaper
+}
