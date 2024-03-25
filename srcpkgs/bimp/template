@@ -1,0 +1,22 @@
+# Template file for 'bimp'
+pkgname=bimp
+version=2.6
+revision=1
+build_style=gnu-makefile
+wrksrc="gimp-plugin-bimp-${version}"
+hostmakedepends="pkg-config which gimp"
+makedepends="gimp-devel lcms2-devel"
+short_desc="Batch Image Manipulation Plugin for GIMP"
+maintainer="biopsin <biopsin@gmail.com>"
+license="GPL-2.0-or-later"
+homepage="https://alessandrofrancesconi.it/projects/bimp/"
+distfiles="https://github.com/alessandrofrancesconi/gimp-plugin-bimp/archive/v${version}.tar.gz"
+checksum=a8abef0f432e9fc8188dc4e8bdceab9a822641f8b8119f4feb70cc51457cf884
+
+do_build() {
+	make
+}
+
+do_install(){
+	vinstall ${wrksrc}/bin/bimp 755 "usr/lib/gimp/2.0/plug-ins"
+}
