@@ -1,0 +1,25 @@
+# Template file for 'xoop'
+pkgname=xoop
+version=1.0
+revision=1
+_commit=03a8999aa980ed2cfe7286f3fddfe86add6a5e12
+build_style=gnu-makefile
+makedepends="xcb-util-cursor-devel"
+short_desc="Loop X cursor around the edges of the screen"
+maintainer="biopsin <biopsin@yahoo.com>"
+license="MIT"
+homepage="https://github.com/m-col/xoop"
+distfiles="${homepage}/archive/${_commit}.tar.gz"
+checksum=e1f7078b9cb0587197151c0400f63faeb566ce733be04e25be0c1ceadba1d844
+
+do_patch() {
+	vsed -e "s|/local||" -e "s|/man|/share/man|" -i makefile
+}
+
+do_build() {
+	make ${makejobs}
+}
+
+post_install() {
+	vlicense LICENSE
+}
