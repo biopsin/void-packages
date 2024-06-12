@@ -1,7 +1,7 @@
 # Template file for 'libreoffice'
 pkgname=libreoffice
-version=24.2.3.2
-revision=2
+version=24.2.4.2
+revision=1
 build_style=meta
 make_build_target="build"
 hostmakedepends="automake flex gperf hyphen icu libtool openldap which gettext xz
@@ -47,8 +47,8 @@ nocross="Several dependencies are nocross=yes"
 # Source, dictionary, help and translations
 _baseurl="https://download.documentfoundation.org/libreoffice/src/${version%.*}"
 # Please don't remove this mirror, it's faster for me
-_baseurl="https://download.nus.edu.sg/mirror/tdf/libreoffice/src/${version%.*}"
-# _baseurl="https://mirrors.nju.edu.cn/tdf/libreoffice/src/${version%.*}"
+#_baseurl="https://download.nus.edu.sg/mirror/tdf/libreoffice/src/${version%.*}"
+_baseurl="https://mirror.accum.se/mirror/documentfoundation.org/libreoffice/src/${version%.*}"
 _addurl="https://dev-www.libreoffice.org/src"
 _exturl="https://dev-www.libreoffice.org/extern"
 
@@ -89,9 +89,9 @@ distfiles="
  ${_addurl}/Java-WebSocket-1.5.4.tar.gz
  ${_addurl}/zxcvbn-c-2.5.tar.gz
 "
-checksum="f6e2059cd85d07793e8d95828b2412906bdba8bf61a5f76b8c51907898481e64
- 8e8acf4c09e2a43e8a86a19418bade97f67b837917bd0c2c6af9c8a8b261bb6b
- e71053a3b51f79079ef745663e68432c2bf20e49557083ab4de1a40c9fae2b4a
+checksum="9e3180a550af2c5f5c70a64516ef083ca6149076beafee33d83c4edb55b5ee83
+ d818370c54012ba2ecde41bb3a63275e9e6a1087fc239c87fbe7722753067cea
+ b8f3dad0a88d7998a2a2333fb1d16c0187b3dfd480ecf65d3b71468160dc9fcd
  1fb458d6aab06932693cc8a9b6e4e70944ee1ff052fa63606e3131df34e21753
  75823776fb51a9c526af904f1503a7afaaab900fba83eda64f8a41073724c870
  7d2797fe9f79a77009721e3f14fa4a1dec17a6d706bdc93f85f1f01d124fab66
