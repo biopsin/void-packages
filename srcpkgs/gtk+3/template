@@ -1,6 +1,6 @@
 # Template file for 'gtk+3'
 pkgname=gtk+3
-version=3.24.42
+version=3.24.43
 revision=1
 build_style=meson
 build_helper="gir"
@@ -15,6 +15,7 @@ configure_args="
  -Dman=true
  $(vopt_bool gir introspection)
  -Dexamples=false
+ -Datk_bridge=false
  "
 conf_files="/etc/gtk-3.0/im-multipress.conf"
 hostmakedepends="gettext-devel glib-devel gtk-doc perl pkg-config
@@ -32,7 +33,7 @@ maintainer="Enno Boland <gottox@voidlinux.org>"
 license="LGPL-2.1-or-later"
 homepage="https://www.gtk.org/"
 distfiles="${GNOME_SITE}/gtk+/${version%.*}/gtk+-${version}.tar.xz"
-checksum=50f89f615092d4dd01bbd759719f8bd380e5f149f6fd78a94725e2de112377e2
+checksum=7e04f0648515034b806b74ae5d774d87cffb1a2a96c468cb5be476d51bf2f3c7
 make_check_pre="xvfb-run dbus-run-session"
 # _broken_tests=""
 
@@ -52,10 +53,17 @@ desc_option_broadway="Enable support for the HTML5 Broadway backend"
 desc_option_cloudproviders="Enable integration with cloudproviders, such as Nextcloud"
 
 # Enable all options (other than cloudproviders) by default.
-build_options_default="colord cups gir broadway wayland x11"
+build_options_default="colord cups gir x11"
 if [ -z "$CROSS_BUILD" ]; then
 	build_options_default+=" gtk_doc"
 fi
+
+pre_configure() {
+	# GTK3-Classic patches
+	for p in ${FILESDIR}/*.patch; do
+		patch -Np1 -i $p
+	done
+}
 
 pre_check() {
 	for t in $_broken_tests; do
