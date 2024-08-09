@@ -6,17 +6,17 @@ revision=1
 hostmakedepends="pkg-config perl"
 makedepends="zlib-devel bzip2-devel freetype-devel alsa-lib-devel libXfixes-devel
  libXext-devel libXvMC-devel libxcb-devel lame-devel libtheora-devel
- libvorbis-devel x264-devel xvidcore-devel jack-devel SDL2-devel
- libcdio-paranoia-devel librtmp-devel libmodplug-devel gnutls-devel
+ libvorbis-devel x264-devel xvidcore-devel jack-devel
+ librtmp-devel libmodplug-devel gnutls-devel
  speex-devel celt-devel harfbuzz-devel libass-devel opus-devel ocl-icd-devel
- libbs2b-devel libvidstab-devel vmaf-devel libbluray-devel pulseaudio-devel
+ libbs2b-devel libvidstab-devel vmaf-devel
  x265-devel v4l-utils-devel libvpx-devel libaom-devel libdav1d-devel
- libwebp-devel libdrm-devel srt-devel librist-devel vulkan-loader-devel
+ libwebp-devel libdrm-devel srt-devel librist-devel
  zimg-devel libmysofa-devel
  $(vopt_if svtav1 libsvt-av1-devel) $(vopt_if vaapi libva-devel)
  $(vopt_if vdpau libvdpau-devel) $(vopt_if fdk_aac fdk-aac-devel)
  $(vopt_if onevpl oneVPL-devel) $(vopt_if nvcodec nv-codec-headers)"
-depends="ffplay6>=${version}_${revision}"
+#depends="ffplay6>=${version}_${revision}"
 short_desc="Decoding, encoding and streaming software"
 maintainer="Orphaned <orphan@voidlinux.org>"
 license="GPL-3.0-or-later"
@@ -35,7 +35,7 @@ case "$XBPS_TARGET_MACHINE" in
 		;;
 	x86_64*)
 		hostmakedepends+=" nasm"
-		build_options_default+=" vaapi vdpau nvcodec onevpl"
+		build_options_default+=" vdpau"
 		;;
 	ppc64*) build_options_default+=" vaapi vdpau";;
 	mips*) CFLAGS="-mnan=legacy";;
@@ -89,20 +89,20 @@ do_configure() {
 
 	./configure --prefix=/usr --disable-debug --enable-gpl --enable-gnutls \
 		--disable-stripping \
-		--enable-libcdio --enable-version3 --enable-runtime-cpudetect \
+		--disable-libcdio --enable-version3 --enable-runtime-cpudetect \
 		--enable-libmp3lame --enable-libvorbis --enable-libxvid \
 		--enable-libx264 --enable-libvpx --enable-libtheora \
 		--enable-shared --enable-static --enable-libxcb \
-		--enable-libpulse --enable-libfreetype --enable-libmodplug \
+		--disable-libpulse --enable-libfreetype --disable-libmodplug \
 		--enable-libspeex --enable-libcelt --enable-libass \
-		--enable-libopus --enable-librtmp --enable-libjack \
+		--enable-libopus --enable-librtmp --disable-libjack \
 		--disable-libopencore_amrnb --disable-libopencore_amrwb \
-		--disable-libopenjpeg --enable-libbluray \
+		--disable-libopenjpeg --disable-libbluray \
 		--enable-postproc --enable-opencl --enable-libvmaf ${_args} \
-		--enable-libx265 --enable-libv4l2 --enable-libaom \
+		--enable-libx265 --disable-libv4l2 --enable-libaom \
 		--enable-libbs2b --enable-libvidstab --enable-libdav1d \
 		--enable-libsrt --enable-librist --enable-libwebp \
-		--enable-vulkan --enable-libdrm \
+		--disable-vulkan --enable-libdrm \
 		$(vopt_if fdk_aac '--enable-nonfree --enable-libfdk-aac') \
 		$(vopt_enable vaapi) $(vopt_enable vdpau) \
 		$(vopt_enable zimg libzimg) \
@@ -208,13 +208,5 @@ ffmpeg6-devel_package() {
 		vmove "usr/lib/*.so"
 		vmove usr/share/ffmpeg/examples
 		vmove usr/share/man/man3
-	}
-}
-
-ffplay6_package() {
-	short_desc="Simple video player using FFmpeg and SDL2"
-	pkg_install() {
-		vmove usr/bin/ffplay
-		vmove "usr/share/man/man1/ffplay*"
 	}
 }
