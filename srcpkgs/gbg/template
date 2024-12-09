@@ -1,0 +1,26 @@
+# Template file for 'gbg'
+pkgname=gbg
+version=1.0.1
+revision=1
+build_style=gnu-makefile
+makedepends="libX11-devel imlib2-devel"
+short_desc="Tiny random gradient backgrounds"
+maintainer="biopsin <biopsin@tuta.io>"
+license="MIT License"
+homepage="https://github.com/stevommmm/gbg"
+distfiles="${homepage}/archive/${version}.tar.gz"
+checksum=1379e01e27f60a6dffff4d5264aeb4f0f13787552cbe58ccc6862fc767551cfa
+
+build_options="comp"
+desc_option_comp="Provide workaround for compositors"
+build_options_default="comp"
+
+do_build() {
+	make $(vopt_if comp BUILD=compositing)
+}
+
+do_install() {
+	vbin gbg
+	vbin ${FILESDIR}/gbgd
+	vlicense LICENSE
+}
