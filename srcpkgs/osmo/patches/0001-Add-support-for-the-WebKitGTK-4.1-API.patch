@@ -1,0 +1,29 @@
+From 35b97af951e022e28cdfe930cc4f5ffa68f295d9 Mon Sep 17 00:00:00 2001
+From: Alberto Garcia <berto@igalia.com>
+Date: Wed, 16 Nov 2022 11:48:27 +0100
+Subject: [PATCH] Add support for the WebKitGTK 4.1 API
+
+This is identical to the old 4.0 one but uses libsoup3 internally
+---
+ configure.ac | 5 +++--
+ 1 file changed, 3 insertions(+), 2 deletions(-)
+
+diff --git a/configure.ac b/configure.ac
+index c95a44b..bc184f7 100644
+--- a/configure.ac
++++ b/configure.ac
+@@ -131,8 +131,9 @@ if test "x$tasks" = "xyes"; then
+ fi
+ 
+ # Checks for libwebkit
+-PKG_CHECK_MODULES(LIBWEBKIT, webkit2gtk-4.0 >= 2.8.0, have_libwebkit=true,
+-    have_libwebkit=false)
++PKG_CHECK_MODULES(LIBWEBKIT, webkit2gtk-4.1, have_libwebkit=true,
++    PKG_CHECK_MODULES(LIBWEBKIT, webkit2gtk-4.0 >= 2.8.0, have_libwebkit=true,
++    have_libwebkit=false))
+ if test "x$have_libwebkit" = "xtrue"; then
+     libwebkit="yes"
+ else
+-- 
+2.30.2
+

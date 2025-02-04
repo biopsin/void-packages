@@ -1,0 +1,29 @@
+# Template file for 'osmo'
+pkgname=osmo
+version=0.4.4
+revision=1
+build_style=gnu-configure
+configure_args="--prefix=/usr"
+hostmakedepends="automake pkg-config"
+makedepends="gtk+3-devel libxml2-devel libnotify-devel $(vopt_if contacts libwebkit2gtk41-devel)
+ $(vopt_if gspell gspell-devel) $(vopt_if ical libical-devel) 
+ $(vopt_if backup 'libarchive-devel libgringotts-devel')"
+short_desc="Personal organizer, calendar, tasks manager, address book and notes"
+maintainer="user<void@linux.eu>"
+license="GPL-2.0-or-later"
+homepage="http://clayo.org/osmo/"
+distfiles="${SOURCEFORGE_SITE}/osmo-pim/files/latest/$pkgname-$version.tar.gz"
+checksum=1e8b11bd1baa0f6756326b58f87eb95a56b38a25d7336fdfb65c2dfca46d03a6
+
+build_options="contacts gspell ical backup"
+desc_option_contacts="Enable contacts, depends on webkit2gtk"
+desc_option_backup="Enable backup !! unavailable !!"
+
+pre_configure() {
+	autoreconf -fi
+}
+
+post_install() {
+	vsed -i ${PKGDESTDIR}/usr/share/applications/osmo.desktop \
+		-e "s|Exec=osmo|Exec=osmo --config=/home/userx/.config/osmo|g"
+}
