@@ -1,5 +1,5 @@
-# Template file for 'sweep-git'
-pkgname=sweep-git
+# Template file for 'sweep'
+pkgname=sweep
 version=0.9.4
 revision=2
 _commit=129aa6fd4c71dbd9fdb78b705d33daed2d2b8b75
