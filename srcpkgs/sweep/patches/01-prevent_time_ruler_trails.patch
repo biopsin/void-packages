@@ -1,5 +1,5 @@
---- src/time_ruler.c	2011-06-22 17:05:45.334749547 -0400
-+++ /src/time_ruler.c	2011-06-22 17:06:30.337713359 -0400
+--- a/src/time_ruler.c	2011-06-22 17:05:45.334749547 -0400
++++ b/src/time_ruler.c	2011-06-22 17:06:30.337713359 -0400
 @@ -104,7 +104,6 @@
    widget_class->motion_notify_event = time_ruler_motion_notify;
  

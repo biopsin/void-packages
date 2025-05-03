@@ -1,5 +1,5 @@
---- configure.ac	2014-12-09 20:37:27.000000000 +0100
-+++ configure.ac	2019-04-17 14:56:33.605262745 +0200
+--- a/configure.ac	2014-12-09 20:37:27.000000000 +0100
++++ b/configure.ac	2019-04-17 14:56:33.605262745 +0200
 @@ -98,6 +98,13 @@
    AC_CHECK_LIB(gmodule-2.0, g_module_init, HAVE_GMODULE="maybe", sweep_config_ok="no")
  fi
@@ -40,8 +40,8 @@
  *** HOW TO FIX "development files missing": you have probably
 
 
---- src/Makefile.am.orig	2019-04-17 14:53:29.600253685 +0200
-+++ src/Makefile.am	2019-04-17 14:57:42.582266141 +0200
+--- a/src/Makefile.am.orig	2019-04-17 14:53:29.600253685 +0200
++++ b/src/Makefile.am	2019-04-17 14:57:42.582266141 +0200
 @@ -11,6 +11,7 @@
  	@GTK_CFLAGS@ \
  	@GLIB_CFLAGS@ \

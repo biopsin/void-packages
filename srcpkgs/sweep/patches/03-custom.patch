@@ -1,7 +1,7 @@
 # Custom tweaks
 # Fix locale support utf-8
---- src/main.c	(Revision 720)
-+++ src/main.c	(Arbeitskopie)
+--- a/src/main.c	(Revision 720)
++++ b/src/main.c	(Arbeitskopie)
 @@ -107,12 +107,17 @@
    gchar *display_env;
  #endif
@@ -22,8 +22,8 @@
    g_print (_("WARNING: Build includes incomplete development code.\n"));
 
 # Modify Super_L to Alt_L
---- src/sample-display.c	2018-04-09 12:01:53.000000000 +0200
-+++ src/sample-display.c	2018-04-09 12:03:06.491415168 +0200
+--- a/src/sample-display.c	2018-04-09 12:01:53.000000000 +0200
++++ b/src/sample-display.c	2018-04-09 12:03:06.491415168 +0200
 @@ -2440,7 +2440,7 @@
  
    switch (event->keyval) {
@@ -43,8 +43,8 @@
      s->meta_down = FALSE;
  
 # Hide "Show history submenu"
---- src/view.c	2018-04-09 22:05:55.000000000 +0200
-+++ src/view.c	2018-04-09 22:08:03.854254436 +0200
+--- a/src/view.c	2018-04-09 22:05:55.000000000 +0200
++++ b/src/view.c	2018-04-09 22:08:03.854254436 +0200
 @@ -536,10 +536,6 @@
                                                    redo_cb, TRUE,
  												  GDK_r, GDK_CONTROL_MASK, view);
@@ -58,8 +58,8 @@
    gtk_widget_show(menuitem);
 
 # Switch from aiff to wav
---- src/sweep_sample.c	2018-04-09 22:27:50.000000000 +0200
-+++ src/sweep_sample.c	2018-04-09 22:28:57.999316183 +0200
+--- a/src/sweep_sample.c	2018-04-09 22:27:50.000000000 +0200
++++ b/src/sweep_sample.c	2018-04-09 22:28:57.999316183 +0200
 @@ -116,7 +116,7 @@
  static void
  filename_generate (char *name, size_t len)

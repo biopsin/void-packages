@@ -1,7 +1,7 @@
 diff --git a/src/interface.c b/src/interface.c
 index 4c1043e..31584a9 100644
---- src/interface.c
-+++ src/interface.c
+--- a/src/interface.c
++++ b/src/interface.c
 @@ -94,7 +94,7 @@ init_accels (void)
    gchar * accels_path;
  
@@ -22,8 +22,8 @@ index 4c1043e..31584a9 100644
  }
 diff --git a/src/preferences.c b/src/preferences.c
 index 16e8256..6497acb 100644
---- src/preferences.c
-+++ src/preferences.c
+--- a/src/preferences.c
++++ b/src/preferences.c
 @@ -64,14 +64,14 @@ prefs_init ()
    struct stat sbuf;
  

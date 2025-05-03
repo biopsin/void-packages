@@ -1,5 +1,5 @@
 # Fix playhead lockup
---- src/driver_alsa.c	2018-04-09 16:31:37.000000000 +0200
+--- a/src/driver_alsa.c	2018-04-09 16:31:37.000000000 +0200
 +++ src/driver_alsa.c	2018-04-09 16:33:54.232275034 +0200
 @@ -169,12 +169,17 @@
    int err;
