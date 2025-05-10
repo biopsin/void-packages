@@ -15,6 +15,7 @@ configure_args="
  -Dman=true
  $(vopt_bool gir introspection)
  -Dexamples=false
+ -Datk_bridge=false
  "
 conf_files="/etc/gtk-3.0/im-multipress.conf"
 hostmakedepends="gettext-devel glib-devel gtk-doc perl pkg-config
@@ -53,10 +54,17 @@ desc_option_broadway="Enable support for the HTML5 Broadway backend"
 desc_option_cloudproviders="Enable integration with cloudproviders, such as Nextcloud"
 
 # Enable all options (other than cloudproviders) by default.
-build_options_default="colord cups gir broadway wayland x11"
+build_options_default="cups gir x11"
 if [ -z "$CROSS_BUILD" ]; then
 	build_options_default+=" gtk_doc"
 fi
+
+pre_configure() {
+	# GTK3-Classic patches
+	for p in ${FILESDIR}/*.patch; do
+		patch -Np1 -i $p
+	done
+}
 
 pre_check() {
 	for t in $_broken_tests; do
