@@ -1,0 +1,100 @@
+From fd1ac1422460c02cba17ea3053a4e6517290750c Mon Sep 17 00:00:00 2001
+From: StefanBruens <stefan.bruens@rwth-aachen.de>
+Date: Wed, 13 Dec 2023 05:48:51 +0100
+Subject: [PATCH] jackdbus: Stop recurrent wakeups when no save is pending
+
+Most processing happens as a result of an incoming
+DBus event. The only case when a timed processing
+is needed is due to an pending save.
+
+Instead of implementing a full event loop just run the
+timed loop while a save is pending, and use an
+infinite timeout otherwise.
+
+Fixes: #962
+---
+ dbus/controller.c | 7 ++++---
+ dbus/controller.h | 4 +++-
+ dbus/jackdbus.c   | 6 ++++--
+ 3 files changed, 11 insertions(+), 6 deletions(-)
+
+diff --git a/dbus/controller.c b/dbus/controller.c
+index f1639b610..7b35de1bb 100644
+--- a/dbus/controller.c
++++ b/dbus/controller.c
+@@ -783,7 +783,7 @@ jack_controller_destroy(
+     free(controller_ptr);
+ }
+ 
+-void
++bool
+ jack_controller_run(
+     void * context)
+ {
+@@ -791,7 +791,7 @@ jack_controller_run(
+ 
+     if (controller_ptr->pending_save == 0)
+     {
+-        return;
++        return false;
+     }
+ 
+     if ((ut = uptime()) < 0)
+@@ -800,11 +800,12 @@ jack_controller_run(
+     }
+     else if (ut < controller_ptr->pending_save + 2) /* delay save by two seconds */
+     {
+-        return;
++        return true;
+     }
+ 
+     controller_ptr->pending_save = 0;
+     jack_controller_settings_save_auto(controller_ptr);
++    return false;
+ }
+ 
+ #undef controller_ptr
+diff --git a/dbus/controller.h b/dbus/controller.h
+index 1db79ecdf..0294ca2e9 100644
+--- a/dbus/controller.h
++++ b/dbus/controller.h
+@@ -20,11 +20,13 @@
+ #ifndef CONTROLLER_H__2CC80B1E_8D5D_45E3_A9D8_9086DDF68BB5__INCLUDED
+ #define CONTROLLER_H__2CC80B1E_8D5D_45E3_A9D8_9086DDF68BB5__INCLUDED
+ 
++#include <stdbool.h>
++
+ void *
+ jack_controller_create(
+     DBusConnection *connection);
+ 
+-void
++bool
+ jack_controller_run(
+     void *controller_ptr);
+ 
+diff --git a/dbus/jackdbus.c b/dbus/jackdbus.c
+index 5f2000a37..2bb1a1068 100644
+--- a/dbus/jackdbus.c
++++ b/dbus/jackdbus.c
+@@ -854,6 +854,7 @@ main (int argc, char **argv)
+     void *controller_ptr;
+     struct stat st;
+     char timestamp_str[26];
++    bool save_pending;
+ 
+     st.st_mtime = 0;
+     stat(argv[0], &st);
+@@ -947,9 +948,10 @@ main (int argc, char **argv)
+     jack_info("Listening for D-Bus messages");
+ 
+     g_exit_command = FALSE;
+-    while (!g_exit_command && dbus_connection_read_write_dispatch (g_connection, 200))
++    save_pending = false;
++    while (!g_exit_command && dbus_connection_read_write_dispatch (g_connection, (save_pending ? 200 : -1)))
+     {
+-        jack_controller_run(controller_ptr);
++        save_pending = jack_controller_run(controller_ptr);
+     }
+ 
+     jack_controller_destroy(controller_ptr);

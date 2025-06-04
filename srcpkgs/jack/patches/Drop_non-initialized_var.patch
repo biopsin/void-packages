@@ -1,0 +1,57 @@
+From ba9ac346c144534b224b2b75af4e1d3638d1a8d4 Mon Sep 17 00:00:00 2001
+From: Samuel Thibault <samuel.thibault@ens-lyon.org>
+Date: Mon, 4 Nov 2024 00:05:08 +0100
+Subject: [PATCH] Drop use of non-initialized variables
+
+Signed-off-by: Samuel Thibault <samuel.thibault@ens-lyon.org>
+---
+ solaris/oss/JackBoomerDriver.cpp | 5 -----
+ solaris/oss/JackOSSDriver.cpp    | 5 -----
+ 2 files changed, 10 deletions(-)
+
+diff --git a/solaris/oss/JackBoomerDriver.cpp b/solaris/oss/JackBoomerDriver.cpp
+index ab34a153f..d33c7a95f 100644
+--- a/solaris/oss/JackBoomerDriver.cpp
++++ b/solaris/oss/JackBoomerDriver.cpp
+@@ -141,7 +141,6 @@ void JackBoomerDriver::SetSampleFormat()
+ void JackBoomerDriver::DisplayDeviceInfo()
+ {
+     audio_buf_info info;
+-    oss_audioinfo ai_in, ai_out;
+     memset(&info, 0, sizeof(audio_buf_info));
+     int cap = 0;
+ 
+@@ -225,10 +224,6 @@ void JackBoomerDriver::DisplayDeviceInfo()
+             if (cap & DSP_CAP_BIND) 	jack_info(" DSP_CAP_BIND");
+         }
+     }
+-
+-    if (ai_in.rate_source != ai_out.rate_source) {
+-        jack_info("Warning : input and output are not necessarily driven by the same clock!");
+-    }
+ }
+ 
+ JackBoomerDriver::JackBoomerDriver(const char* name, const char* alias, JackLockedEngine* engine, JackSynchro* table)
+diff --git a/solaris/oss/JackOSSDriver.cpp b/solaris/oss/JackOSSDriver.cpp
+index 0047ecc58..fbbc5f606 100644
+--- a/solaris/oss/JackOSSDriver.cpp
++++ b/solaris/oss/JackOSSDriver.cpp
+@@ -140,7 +140,6 @@ void JackOSSDriver::SetSampleFormat()
+ void JackOSSDriver::DisplayDeviceInfo()
+ {
+     audio_buf_info info;
+-    oss_audioinfo ai_in, ai_out;
+     memset(&info, 0, sizeof(audio_buf_info));
+     int cap = 0;
+ 
+@@ -223,10 +222,6 @@ void JackOSSDriver::DisplayDeviceInfo()
+             if (cap & DSP_CAP_BIND) 	jack_info(" DSP_CAP_BIND");
+         }
+     }
+-
+-    if (ai_in.rate_source != ai_out.rate_source) {
+-        jack_info("Warning : input and output are not necessarily driven by the same clock!");
+-    }
+ }
+ 
+ int JackOSSDriver::OpenInput()
