@@ -1,0 +1,11 @@
+--- a/conf1.c	2023-07-20 16:39:34.000000000 +0200
++++ b/conf.c	2024-04-06 11:50:21.209963315 +0200
+@@ -325,7 +325,7 @@
+ 		else
+ 			home = "/";
+ 	}
+-	xasprintf(&c->conf_file, "%s/%s", home, ".cwmrc");
++	xasprintf(&c->conf_file, "%s/%s", home, ".config/cwm/cwmrc");
+ 	xasprintf(&c->known_hosts, "%s/%s", home, ".ssh/known_hosts");
+ }
+ 

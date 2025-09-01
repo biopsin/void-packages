@@ -1,0 +1,102 @@
+From 6186b9596d7eafbcbabee21c9bfc4aa8cb68197d Mon Sep 17 00:00:00 2001
+From: Charles Daniels <charles@cdaniels.net>
+Date: Mon, 20 May 2019 09:25:49 -0400
+Subject: [PATCH] integrate window-center patch
+
+---
+diff --git a/calmwm.h b/calmwm.h
+index 8e44228..584a4be 100644
+--- a/calmwm.h
++++ b/calmwm.h
+@@ -426,6 +426,7 @@
+ void			 client_config(struct client_ctx *);
+ struct client_ctx	*client_current(struct screen_ctx *);
+ void			 client_draw_border(struct client_ctx *);
++void			 client_center(struct client_ctx *);
+ struct client_ctx	*client_find(Window);
+ void			 client_get_sizehints(struct client_ctx *);
+ void			 client_hide(struct client_ctx *);
+@@ -509,6 +510,7 @@ void			 screen_assert_clients_within(struct screen_ctx *);
+ void			 kbfunc_cwm_status(void *, struct cargs *);
+ void			 kbfunc_ptrmove(void *, struct cargs *);
+ void			 kbfunc_client_snap(void *, struct cargs *);
++void			 kbfunc_client_center(void *, struct cargs *);
+ void			 kbfunc_client_move(void *, struct cargs *);
+ void			 kbfunc_client_resize(void *, struct cargs *);
+ void			 kbfunc_client_delete(void *, struct cargs *);
+diff --git a/client.c b/client.c
+index 1d9195b..4d2e052 100644
+--- a/client.c
++++ b/client.c
+@@ -644,6 +644,31 @@ client_send_delete(struct client_ctx *cc)
+ 		XKillClient(X_Dpy, cc->win);
+ }
+ 
++
++void
++client_center(struct client_ctx *cc)
++{
++
++	struct screen_ctx	*sc = cc->sc;
++	struct geom		 area;
++
++	if (cc->flags & CLIENT_FREEZE)
++		return;
++
++	area = screen_area(sc,
++	    cc->geom.x + cc->geom.w / 2,
++	    cc->geom.y + cc->geom.h / 2, 1);
++
++	cc->geom.x = area.x + area.w * 0.33;
++	cc->geom.y = area.y + area.h * 0.10;
++	client_apply_sizehints(cc);
++	client_resize(cc, 1);
++
++	/* Make sure the pointer stays within the window. */
++	client_ptr_inbound(cc, 0);
++}
++
++
+ void
+ client_setname(struct client_ctx *cc)
+ {
+diff --git a/conf.c b/conf.c
+index d6d88d2..fb78746 100644
+--- a/conf.c
++++ b/conf.c
+@@ -95,6 +95,7 @@ static const struct {
+ 	{ FUNC_CC(window-snap-up-left, client_snap, (CWM_UP_LEFT)) },
+ 	{ FUNC_CC(window-snap-down-right, client_snap, (CWM_DOWN_RIGHT)) },
+ 	{ FUNC_CC(window-snap-down-left, client_snap, (CWM_DOWN_LEFT)) },
++	{ FUNC_CC(window-center, client_center, 0) },
+ 	{ FUNC_CC(window-move, client_move, 0) },
+ 	{ FUNC_CC(window-move-up, client_move, (CWM_UP)) },
+ 	{ FUNC_CC(window-move-down, client_move, (CWM_DOWN)) },
+@@ -234,6 +235,7 @@ static const struct {
+ 	{ "CMS-j",	"window-resize-down-big" },
+ 	{ "CMS-k",	"window-resize-up-big" },
+ 	{ "CMS-l",	"window-resize-right-big" },
++	{ "MS-space",	"window-center" },
+ },
+ mouse_binds[] = {
+ 	{ "1",		"menu-window" },
+diff --git a/kbfunc.c b/kbfunc.c
+index 3119d1b..7b662e6 100644
+--- a/kbfunc.c
++++ b/kbfunc.c
+@@ -297,6 +297,12 @@ kbfunc_client_resize_mb(void *ctx, struct cargs *cargs)
+ 	client_ptr_inbound(cc, 0);
+ }
+ 
++void
++kbfunc_client_center (void *ctx, struct cargs *cargs)
++{
++	client_center(ctx);
++}
++
+ void
+ kbfunc_client_snap(void *ctx, struct cargs *cargs)
+ {
+-- 
+2.43.0
+
