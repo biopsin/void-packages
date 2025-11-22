@@ -1,23 +1,24 @@
 # Template file for 'spacefm'
 pkgname=spacefm
 version=1.0.6
-revision=2
+revision=1
 build_style=gnu-configure
-configure_args="$(vopt_with gtk3)"
+configure_args="-with-gtk3 --disable-startup-notification
+ --disable-desktop-integration --disable-video-thumbnails"
+wrksrc="spacefm-alpha"
 hostmakedepends="pkg-config intltool"
-makedepends="$(vopt_if gtk3 gtk+3-devel)
- startup-notification-devel eudev-libudev-devel ffmpegthumbnailer-devel"
+makedepends="gtk+3-devel eudev-libudev-devel"
 depends="hicolor-icon-theme desktop-file-utils"
 short_desc="Multi-panel tabbed file manager"
 maintainer="Orphaned <orphan@voidlinux.org>"
 license="GPL-3.0-or-later"
 homepage="http://ignorantguru.github.io/spacefm/"
-distfiles="https://github.com/IgnorantGuru/spacefm/archive/${version}.tar.gz"
-checksum=fedea9fcad776e0af4b8d90c5a1c86684a9c96ef1cdd4e959530ce93bdebe7c9
+distfiles="https://github.com/IgnorantGuru/spacefm/archive/alpha.zip"
+checksum=366fabf401e21c1e63988f2a6ae3fe686452d33082b355a2246dcfd27c2d4cfe
+#distfiles="https://github.com/IgnorantGuru/spacefm/archive/${version}.tar.gz"
+#checksum=fedea9fcad776e0af4b8d90c5a1c86684a9c96ef1cdd4e959530ce93bdebe7c9
 conf_files="/etc/spacefm/spacefm.conf"
 
-build_options="gtk3"
-build_options_default="gtk3"
 CFLAGS="-fcommon"
 
 post_patch() {

@@ -1,0 +1,11 @@
+## https://www.linuxquestions.org/questions/showthread.php?s=93d6fee4e5d3e28a37e20c317871e0e2&p=6511945#post6511945
+
+find . -type f \( -name "*.c" -o -name "*.h" \) -exec sed -i 's/EXO_ICON_VIEW_GET_PRIVATE/G_ADD_PRIVATE/g' {} + || exit
+wait
+find . -type f -name "*.c" -exec sed -i 's|new_event->key.window = g_object_ref (G_OBJECT (gtk_widget_get_window (GTK_WIDGET(icon_view->priv->search_entry))));|new_event->key.window = gtk_widget_get_window(GTK_WIDGET(icon_view->priv->search_entry));|g' {} + || exit
+wait
+find . -name '*.c' -exec sed -i 's/model->icon_theme = g_object_ref (G_OBJECT (icon_theme));/model->icon_theme = GTK_ICON_THEME(g_object_ref(icon_theme));/' {} + || exit
+#wait
+#find . -name '*.c' -exec grep -l 'g_object_ref (G_OBJECT (source))' {} +
+wait
+find . -name '*.c' -exec sed -i 's/g_object_ref (G_OBJECT (source))/gdk_pixbuf_ref (source)/g' {} +
