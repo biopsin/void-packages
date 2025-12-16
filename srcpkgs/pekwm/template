@@ -1,16 +1,22 @@
 # Template file for 'pekwm'
 pkgname=pekwm
-version=0.3.2
+version=0.4.1
 revision=1
 build_style=cmake
+configure_args="-DENABLE_SHAPE=OFF -DENABLE_XINERAMA=OFF
+ -DENABLE_RANDR=OFF -DENABLE_XFT=ON -DENABLE_IMAGE_XPM=OFF
+ -DENABLE_IMAGE_JPEG=OFF -DENABLE_IMAGE_PNG=OFF"
 hostmakedepends="pkg-config"
-makedepends="libjpeg-turbo-devel libpng-devel libXpm-devel
- libXft-devel fontconfig-devel libXinerama-devel libXrandr-devel
- pango-devel"
+makedepends="libXft-devel fontconfig-devel"
 short_desc="Window manager based on aewm++"
 maintainer="biopsin <biopsin@teknik.io>"
 license="GPL-2.0-or-later"
 homepage="https://www.pekwm.se/"
 distfiles="https://github.com/pekdon/pekwm/archive/release-${version}.tar.gz"
-checksum=cf5e61a753f1a125877c65477ffd9b76b1aa6cec0f241f1fd6af9159dd23bfdf
+checksum=73827e2547fa0f38185e91c9e69cf817230017d6605eca488ea01993376cdb9e
 conf_files="/etc/pekwm/*"
+ignore_elf_dirs="/usr/share/pekwm/scripts"
+
+post_install() {
+    rm ${DESTDIR}/usr/bin/pekwm_{bg,sys,ctrl,dialog,panel,theme}
+}
