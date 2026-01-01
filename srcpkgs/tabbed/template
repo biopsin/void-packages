@@ -14,6 +14,7 @@ checksum=0acf87457b7419e66fbfa3a9cec95ffb46d254c6b88b5e4bb7cc18c3a92008a8
 
 pre_build() {
 	vsed -i 's|X11R6/||g' Makefile
+	cp ${FILESDIR}/config.def.h .
 }
 
 post_install() {
