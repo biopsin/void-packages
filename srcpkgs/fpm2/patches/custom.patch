@@ -1,0 +1,40 @@
+--- a/meson.build	2025-10-31 14:24:47.000000000 +0100
++++ b/meson1.build	2026-01-04 17:09:08.231141466 +0100
+@@ -36,7 +36,7 @@
+ conf.set_quoted('LOCALE_DIR', localedir)
+ conf.set_quoted('PACKAGE_LOCALE_DIR', localedir)
+ conf.set_quoted('PACKAGE_PIXMAP_DIR', pixmapdir)
+-conf.set10('ENABLE_NLS', true)
++conf.set10('ENABLE_NLS', false)
+ 
+ buildtype = get_option('buildtype')
+ if buildtype == 'debug'
+--- a/src/interface1.c	2025-02-25 19:08:14.000000000 +0100
++++ b/src/interface.c	2026-01-04 17:13:02.483150371 +0100
+@@ -1037,7 +1037,7 @@
+   gtk_widget_show (vbox1);
+   gtk_box_pack_start (GTK_BOX (dialog_vbox3), vbox1, TRUE, TRUE, 0);
+ 
+-  label11 = gtk_label_new (_("Welcome to"));
++  label11 = gtk_label_new (_(""));
+   gtk_widget_show (label11);
+   gtk_box_pack_start (GTK_BOX (vbox1), label11, FALSE, FALSE, 0);
+   gtk_label_set_justify (GTK_LABEL (label11), GTK_JUSTIFY_CENTER);
+@@ -1050,7 +1050,7 @@
+   gtk_widget_show (pixmap1);
+   gtk_box_pack_start (GTK_BOX (vbox1), pixmap1, TRUE, TRUE, 0);
+ 
+-  label27 = gtk_label_new (_("Figaro's Password Manager 2"));
++  label27 = gtk_label_new (_(""));
+   gtk_widget_show (label27);
+   gtk_box_pack_start (GTK_BOX (vbox1), label27, FALSE, FALSE, 0);
+   gtk_label_set_justify (GTK_LABEL (label27), GTK_JUSTIFY_CENTER);
+@@ -1068,7 +1068,7 @@
+                     (GtkAttachOptions) (0), 0, 0);
+   gtk_misc_set_alignment (GTK_MISC (key_file_label), 0, 0.5);
+ 
+-  label70 = gtk_label_new_with_mnemonic (_("_Password:"));
++  label70 = gtk_label_new_with_mnemonic (_(""));
+   gtk_widget_show (label70);
+   gtk_table_attach (GTK_TABLE (table6), label70, 0, 1, 0, 1,
+                     (GtkAttachOptions) (GTK_FILL),
