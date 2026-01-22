@@ -1,0 +1,21 @@
+From 087b7a31bbe900b56014bbff8781c446398c28cd Mon Sep 17 00:00:00 2001
+From: Charles Daniels <charles@cdaniels.net>
+Date: Tue, 11 Jun 2019 21:21:16 -0400
+Subject: [PATCH] disable pointer warp on map requests
+
+---
+--- a/xevents.c
++++ b/xevents.c
+@@ -88,9 +88,6 @@
+ 
+ 	if ((cc = client_find(e->window)) == NULL)
+ 		cc = client_init(e->window, NULL);
+-
+-	if ((cc != NULL) && (!(cc->flags & CLIENT_IGNORE)))
+-		client_ptr_warp(cc);
+ }
+ 
+ static void
+-- 
+2.43.0
+
