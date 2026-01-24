@@ -1,0 +1,62 @@
+From 39d9aacbdb2657373003aff189e3ef4f9d1f6bac Mon Sep 17 00:00:00 2001
+From: Auska <luodan0709@live.cn>
+Date: Sat, 18 Oct 2025 08:10:00 +0800
+Subject: [PATCH] Fix [-Wdeprecated-literal-operator] warnings in
+ a2functional.h
+
+Change deprecated forms like `operator"" _k` to standard-compliant `operator""_k`.
+This aligns with C++14+ requirements and removes compiler deprecation warnings.
+No behavioral changes introduced.
+---
+ src/a2functional.h | 14 +++++++-------
+ 1 file changed, 7 insertions(+), 7 deletions(-)
+
+diff --git a/src/a2functional.h b/src/a2functional.h
+index bacfff573b..2138769405 100644
+--- a/src/a2functional.h
++++ b/src/a2functional.h
+@@ -169,37 +169,37 @@ make_unique(size_t size)
+ 
+ // User-defined literals for K, M, and G (powers of 1024)
+ 
+-constexpr unsigned long long operator"" _k(unsigned long long k)
++constexpr unsigned long long operator""_k(unsigned long long k)
+ {
+   return k * 1024;
+ }
+ 
+-constexpr unsigned long long operator"" _m(unsigned long long m)
++constexpr unsigned long long operator""_m(unsigned long long m)
+ {
+   return m * 1024 * 1024;
+ }
+ 
+-constexpr unsigned long long operator"" _g(unsigned long long g)
++constexpr unsigned long long operator""_g(unsigned long long g)
+ {
+   return g * 1024 * 1024 * 1024;
+ }
+ 
+-constexpr std::chrono::hours operator"" _h(unsigned long long h)
++constexpr std::chrono::hours operator""_h(unsigned long long h)
+ {
+   return std::chrono::hours(h);
+ }
+ 
+-constexpr std::chrono::minutes operator"" _min(unsigned long long min)
++constexpr std::chrono::minutes operator""_min(unsigned long long min)
+ {
+   return std::chrono::minutes(min);
+ }
+ 
+-constexpr std::chrono::seconds operator"" _s(unsigned long long s)
++constexpr std::chrono::seconds operator""_s(unsigned long long s)
+ {
+   return std::chrono::seconds(s);
+ }
+ 
+-constexpr std::chrono::milliseconds operator"" _ms(unsigned long long ms)
++constexpr std::chrono::milliseconds operator""_ms(unsigned long long ms)
+ {
+   return std::chrono::milliseconds(ms);
+ }

@@ -9,7 +9,7 @@ configure_args="--with-openssl --with-libexpat --without-gnutls
  --enable-libaria2"
 hostmakedepends="pkg-config"
 makedepends="c-ares-devel expat-devel gmp-devel openssl-devel sqlite-devel
- zlib-devel"
+ zlib-devel liblzma-devel"
 depends="ca-certificates"
 checkdepends="libcppunit-devel"
 short_desc="Lightweight multi-protocol/multi-source command-line download utility"
