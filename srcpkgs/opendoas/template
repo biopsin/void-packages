@@ -22,6 +22,8 @@ pre_configure() {
 	cp ${FILESDIR}/doas.pam pam.d__doas__linux
 	vsed -i GNUmakefile \
 		-e '/chown ${BINOWN}:${BINGRP}/d'
+
+	cp ${FILESDIR}/vidoas .
 }
 
 post_install() {
