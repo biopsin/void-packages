@@ -1,0 +1,30 @@
+From 206551fed2282f5a17792297fb36d4aebe38e1b7 Mon Sep 17 00:00:00 2001
+From: NH000 <nikola.hadzic.000@protonmail.com>
+Date: Wed, 12 Mar 2025 21:23:05 +0100
+Subject: [PATCH] Updated the manual page to include -e / --empty option
+
+---
+ xsel.1x | 6 +++++-
+ 1 file changed, 5 insertions(+), 1 deletion(-)
+
+diff --git a/xsel.1x b/xsel.1x
+index 1313c44..d19741f 100644
+--- a/xsel.1x
++++ b/xsel.1x
+@@ -1,4 +1,4 @@
+-.TH XSEL 1x "January 2008"
++.TH XSEL 1x "March 2025"
+ .SH NAME
+ xsel \- manipulate the X selection.
+ .SH SYNOPSIS
+@@ -78,6 +78,10 @@ options.
+ \fB\-x\fR, \fB\-\-exchange\fR
+ exchange the PRIMARY and SECONDARY selections. Ignores all \fIinput\fR
+ and \fIoutput\fR options.
++.TP
++\fB\-e\fR, \fB\-\-empty\fR
++When used together with \fB-k\fR or \fB-x\fR it will not ignore the PRIMARY
++and SECONDARY selections even if they (both or any one) are empty.
+ 
+ .PP
+ \fBX options\fR

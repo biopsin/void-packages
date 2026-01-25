@@ -1,0 +1,73 @@
+From fed2fe94c6143c3b3ba8a8cff474d3b45fcf0cad Mon Sep 17 00:00:00 2001
+From: NH000 <nikola.hadzic.000@protonmail.com>
+Date: Wed, 12 Mar 2025 21:22:29 +0100
+Subject: [PATCH] -e / --empty option added to the program
+
+---
+ xsel.c | 28 ++++++++++++++++++++++++----
+ 1 file changed, 24 insertions(+), 4 deletions(-)
+
+diff --git a/xsel.c b/xsel.c
+index 0dd9bd4..d66e50f 100644
+--- a/xsel.c
++++ b/xsel.c
+@@ -78,6 +78,9 @@ static Bool do_zeroflush = False;
+ /* do_follow: Follow mode for output */
+ static Bool do_follow = False;
+ 
++/* do_empty: Operate with empty strings when -k or -x are supplied */
++static Bool do_empty = False;
++
+ /* nodaemon: Disable daemon mode if True. */
+ static Bool no_daemon = False;
+ 
+@@ -135,7 +138,9 @@ usage (void)
+   printf ("  -k, --keep            Do not modify the selections, but make the PRIMARY\n");
+   printf ("                        and SECONDARY selections persist even after the\n");
+   printf ("                        programs they were selected in exit.\n");
+-  printf ("  -x, --exchange        Exchange the PRIMARY and SECONDARY selections\n\n");
++  printf ("  -x, --exchange        Exchange the PRIMARY and SECONDARY selections\n");
++  printf ("  -e, --empty           Keep / exchange the PRIMARY and SECONDARY selections\n");
++  printf ("                        even when they, both or any one, are empty.\n\n");
+   printf ("X options\n");
+   printf ("  --display displayname\n");
+   printf ("                        Specify the connection to the X server\n");
+@@ -1877,13 +1882,26 @@ set_selection_pair (unsigned char * sel_p, unsigned char * sel_s)
+  * primary and secondary selections with texts 'sel_p' and 'sel_s'
+  * respectively.
+  *
+- * If both 'sel_p' and 'sel_s' are empty strings (NULL or "") then no
+- * daemon process is created, and both selections are cleared instead.
++ * If 'do_empty' is set, whichever one of 'sel_p' and 'sel_s' is NULL
++ * is assigned a newly allocated empty string (""); the function then
++ * proceeds normally i.e. as if 'sel_p' and 'sel_s' were passed to it
++ * as non-NULL strings. If 'do_empty' is not set and both 'sel_p' and
++ * 'sel_s' are empty strings (NULL or "") then no daemon process is
++ * created, and both selections are cleared instead.
+  */
+ static void
+ set_selection_pair__daemon (unsigned char * sel_p, unsigned char * sel_s)
+ {
+-  if (empty_string (sel_p) && empty_string (sel_s)) {
++  if (do_empty) {
++    if (sel_p == NULL) {
++      sel_p = xs_malloc (sizeof(char));
++      sel_p[0] = '\0';
++    }
++    if (sel_s == NULL) {
++      sel_s = xs_malloc (sizeof(char));
++      sel_s[0] = '\0';
++    }
++  } else if (empty_string (sel_p) && empty_string (sel_s)) {
+     clear_selection (XA_PRIMARY);
+     clear_selection (XA_SECONDARY);
+     return;
+@@ -2117,6 +2135,8 @@ main(int argc, char *argv[])
+       do_keep = True;
+     } else if (OPT("--exchange") || OPT("-x")) {
+       do_exchange = True;
++    } else if (OPT("--empty") || OPT("-e")) {
++      do_empty = True;
+     } else if (OPT("--display")) {
+       i++; if (i >= argc) goto usage_err;
+       display_name = argv[i];

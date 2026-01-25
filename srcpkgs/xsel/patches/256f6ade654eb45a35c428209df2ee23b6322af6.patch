@@ -1,0 +1,21 @@
+From 256f6ade654eb45a35c428209df2ee23b6322af6 Mon Sep 17 00:00:00 2001
+From: NH000 <nikola.hadzic.000@protonmail.com>
+Date: Wed, 12 Mar 2025 21:25:16 +0100
+Subject: [PATCH] Added Nikola Hadzic and his contribution to AUTHORS: -e /
+ --empty option
+
+---
+ AUTHORS | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/AUTHORS b/AUTHORS
+index 40eab52..e28cc2a 100644
+--- a/AUTHORS
++++ b/AUTHORS
+@@ -12,3 +12,6 @@ Taylan Ulrich B.<taylanbayirli@gmail.com>
+ 
+ Hans de Groede
+         - fix overflow of supported_targets array
++
++Nikola Hadzic <nikola.hadzic.000@protonmail.com>
++        - added -e / --empty flag
