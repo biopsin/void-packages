@@ -1,0 +1,14 @@
+# Template file for 'fuseiso'
+pkgname=fuseiso
+version=070708
+_commit=a0cdbb276a671c876fb1e93c4bf9c311fdcd374c
+revision=1
+build_style=meson
+hostmakedepends="pkg-config"
+makedepends="glib-devel fuse-devel"
+short_desc="FUSE filesystem for mounting ISO9660 images"
+maintainer="biopsin <biopsin@tuta.io>"
+license="GPL-3.0-or-later"
+homepage="http://ignorantguru.github.io/spacefm/"
+distfiles="https://github.com/elemongw/fuseiso/archive/${_commit}.tar.gz"
+checksum=95e5aaa0662fc7dc3e5aeda3df17631b4e2b3a0ab5cad2ea151688d48a3360e7
