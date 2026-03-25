@@ -1,18 +1,25 @@
 # Template file for 'clipmenu'
 pkgname=clipmenu
-version=6.2.0
+version=7.0.0.260320
 revision=1
-depends="bash dmenu clipnotify xsel"
+_commit=4413a1af840ad8995d68eea99696ad05525e1611
+wrksrc="clipmenu-${_commit}"
+build_style="gnu-makefile"
+makedepends="xorgproto libX11-devel libXfixes-devel"
+depends="xsel"
 short_desc="Clipboard management using dmenu"
-maintainer="Orphaned <orphan@voidlinux.org>"
+maintainer="biopsin <biopsin@tuta.io>"
 license="Public Domain"
 homepage="https://github.com/cdown/clipmenu"
-distfiles="${homepage}/archive/${version}.tar.gz"
-checksum=15830429dbe78da8168e71c6e1cc9fccf5c4d03ebae8ccefb0a5dbaa98adbbb8
+distfiles="https://github.com/cdown/clipmenu/archive/${_commit}.tar.gz"
+checksum=9020d33ccca93e668bcf9eb98d191b08eda687f5407ed9811f07d2924fc66697
 
-do_install() {
-	vbin clipdel
-	vbin clipmenu
-	vbin clipmenud
-	vlicense LICENSE
+post_extract() {
+	vsed -i 's|/X11R6||g' Makefile
+	vsed -i 's|/local||g' Makefile
+}
+
+post_install() {
+	# remove systemd service file
+	rm -r "${DESTDIR}/usr/lib"
 }
