@@ -1,0 +1,68 @@
+From d59960199ba2a5febfe32f290e39734a6dbd5f85 Mon Sep 17 00:00:00 2001
+From: job <job>
+Date: Wed, 20 Aug 2025 23:44:06 +0000
+Subject: [PATCH] add window-snap-center function
+
+OK tb@ okan@
+---
+ calmwm.h | 1 +
+ conf.c   | 1 +
+ cwmrc.5  | 2 ++
+ kbfunc.c | 7 +++++++
+ 4 files changed, 11 insertions(+)
+
+diff --git a/calmwm.h b/calmwm.h
+index 60e59f6..1b9813d 100644
+--- a/calmwm.h
++++ b/calmwm.h
+@@ -55,6 +55,7 @@
+ #define CWM_LEFT		0x0004
+ #define CWM_RIGHT		0x0008
+ #define CWM_BIGAMOUNT		0x0010
++#define CWM_CENTER		0x0020
+ #define CWM_UP_BIG		(CWM_UP | CWM_BIGAMOUNT)
+ #define CWM_DOWN_BIG		(CWM_DOWN | CWM_BIGAMOUNT)
+ #define CWM_LEFT_BIG		(CWM_LEFT | CWM_BIGAMOUNT)
+diff --git a/conf.c b/conf.c
+index 39f0406..f4f0d3e 100644
+--- a/conf.c
++++ b/conf.c
+@@ -102,6 +102,7 @@ static const struct {
+ 	{ FUNC_CC(window-movetogroup-7, client_movetogroup, 7) },
+ 	{ FUNC_CC(window-movetogroup-8, client_movetogroup, 8) },
+ 	{ FUNC_CC(window-movetogroup-9, client_movetogroup, 9) },
++	{ FUNC_CC(window-snap-center, client_snap, (CWM_CENTER)) },
+ 	{ FUNC_CC(window-snap-up, client_snap, (CWM_UP)) },
+ 	{ FUNC_CC(window-snap-down, client_snap, (CWM_DOWN)) },
+ 	{ FUNC_CC(window-snap-right, client_snap, (CWM_RIGHT)) },
+diff --git a/cwmrc.5 b/cwmrc.5
+index 7d5f1f8..a647127 100644
+--- a/cwmrc.5
++++ b/cwmrc.5
+@@ -401,6 +401,8 @@ pixels right.
+ Resize window 10 times
+ .Ar moveamount
+ pixels left.
++.It window-snap-center
++Snap window to center.
+ .It window-snap-up
+ Snap window to top edge.
+ .It window-snap-down
+diff --git a/kbfunc.c b/kbfunc.c
+index b73133b..40a6dfb 100644
+--- a/kbfunc.c
++++ b/kbfunc.c
+@@ -320,6 +320,13 @@ kbfunc_client_snap(void *ctx, struct cargs *cargs)
+ 			    (cc->bwidth * 2);
+ 			flags &= ~CWM_DOWN;
+ 		}
++		if (flags & CWM_CENTER) {
++			cc->geom.x = area.x +
++			    (area.w - cc->geom.w - cc->bwidth) / 2;
++			cc->geom.y = area.y +
++			    (area.h - cc->geom.h - cc->bwidth) / 2;
++			flags &= ~CWM_CENTER;
++		}
+ 	}
+ 	client_move(cc);
+ 	client_ptr_inbound(cc, 1);

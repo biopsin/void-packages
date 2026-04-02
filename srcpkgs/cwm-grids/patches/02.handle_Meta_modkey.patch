@@ -1,0 +1,28 @@
+From fe0b4b28bdb0d5eabb902fff6909cffbf4c2c0a7 Mon Sep 17 00:00:00 2001
+From: okan <okan>
+Date: Mon, 5 Jan 2026 14:46:59 +0000
+Subject: [PATCH] handle Meta release as a separate mod key.
+
+from Sven M. Hallberg
+---
+ xevents.c | 7 +++++--
+ 1 file changed, 5 insertions(+), 2 deletions(-)
+
+diff --git a/xevents.c b/xevents.c
+index 1aaa929c..a8d8a0cb 100644
+--- a/xevents.c
++++ b/xevents.c
+@@ -68,8 +68,11 @@ void		(*xev_handlers[LASTEvent])(XEvent *) = {
+ 			[Expose] = xev_handle_expose,
+ };
+ 
+-static KeySym modkeys[] = { XK_Alt_L, XK_Alt_R, XK_Super_L, XK_Super_R,
+-			    XK_Control_L, XK_Control_R, XK_ISO_Level3_Shift };
++static KeySym modkeys[] = { XK_Control_L, XK_Control_R,
++			    XK_Alt_L, XK_Alt_R,
++			    XK_Meta_L, XK_Meta_R,
++			    XK_Super_L, XK_Super_R,
++			    XK_ISO_Level3_Shift };
+ 
+ static void
+ xev_handle_maprequest(XEvent *ee)

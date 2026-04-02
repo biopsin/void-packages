@@ -1,0 +1,26 @@
+# Template file for 'cwm-grids'
+pkgname=cwm-grids
+version=7.4.251223
+revision=1
+_commit=71329369257e5597092785cba21e00ea5dc11bc3
+build_style=gnu-makefile
+hostmakedepends="pkg-config bison"
+makedepends="libXft-devel libXinerama-devel libXrandr-devel"
+short_desc="cwm that adds optional grid snapping when moving and resizing windows."
+maintainer="biopsin <biopsin@tuta.io>"
+license="ISC"
+homepage="https://github.com/9lbw/cwm-grids"
+distfiles="https://github.com/9lbw/cwm-grids/archive/${_commit}/cwm-grids-${_commit}.tar.gz"
+checksum=f50c73d4c01bfe7a8dcc69ebbf76133a2bd3119f829fe5d6e124f8cb59a61e4f
+
+if [ "$XBPS_TARGET_LIBC" = "musl" ]; then
+	makedepends+=" musl-legacy-compat"
+fi
+
+post_extract() {
+	sed -i 's/^\(LD\|CPP\)FLAGS/override &/' Makefile
+	sed '/\*\//q' calmwm.c >LICENSE
+}
+post_install() {
+	vlicense LICENSE
+}
