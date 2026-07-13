@@ -1,0 +1,20 @@
+# Template file for 'fastcompmgr'
+pkgname=fastcompmgr
+version=0.6.1
+revision=1
+#_commit=a0f136856a91763bc32f8cdd560a2dc3964ef738
+build_style=gnu-makefile
+hostmakedepends="pkg-config "
+makedepends="libXcomposite-devel libXdamage-devel libXrender-devel libXext-devel"
+short_desc="fast compositor for X"
+maintainer="biopsin <biopsin@tuta.com>"
+license="HPND"
+homepage="https://github.com/tycho-kirchner/fastcompmgr"
+#distfiles="https://github.com/tycho-kirchner/fastcompmgr/archive/${_commit}/fastcompmgr-${_commit}.tar.gz"
+distfiles="https://github.com/tycho-kirchner/fastcompmgr/archive/refs/tags/v${version}.tar.gz"
+checksum=b93b5c6ed6926e7c9419e3e620d2bf26a8f106bd55f59474e0d7d6328003192c
+
+post_install() {
+	vbin fastcompmgr
+	vlicense LICENSE
+}
