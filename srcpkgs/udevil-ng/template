@@ -1,0 +1,24 @@
+# Template file for 'udevil-ng'
+pkgname=udevil-ng
+version=0.1
+revision=2
+_commit=666e443c36182751c81f3be3115d0ed9f8f2af58
+build_style=gnu-configure
+configure_args="--disable-systemd"
+conf_files="/etc/udevil/udevil.conf"
+hostmakedepends="pkg-config intltool"
+makedepends="libglib-devel eudev-libudev-devel"
+short_desc="CLI which mounts and unmounts removable devices"
+maintainer="Orphaned <orphan@voidlinux.org>"
+license="GPL-3.0-or-later"
+homepage="https://github.com/Arnie97/udevil-ng"
+distfiles="https://github.com/Arnie97/udevil-ng/archive/${_commit}.tar.gz"
+checksum=55980a67c0fdc25e3dce7a2d70b9528b8ae3de5cb64a35696f22907175a7272f
+
+post_patch() {
+	vsed -i -e '/DATADIRNAME=/s/=.*/=share/' configure
+}
+
+post_install() {
+	vsv devmon
+}
