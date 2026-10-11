@@ -1,0 +1,220 @@
+--- a/src/vnr-window.h	2018-05-13 11:40:40.000000000 +0200
++++ b/src/vnr-window.h	2021-02-14 09:21:38.082244802 +0100
+@@ -104,7 +104,6 @@
+     gint ss_timeout;
+     GtkWidget *ss_timeout_widget;
+ 
+-    GtkActionGroup *action_wallpaper;
+     GtkActionGroup *action_copy;
+ };
+ 
+
+--- a/src/vnr-window.c	2026-10-11 10:48:22.080108575 +0200
++++ b/src/vnr-window.c	2026-10-11 10:57:38.232129718 +0200
+@@ -109,7 +109,6 @@
+       "<menuitem action=\"ImageRotateCCW\"/>"
+       "<separator/>"
+       "<menuitem action=\"ImageCrop\"/>"
+-      "<placeholder name=\"WallpaperEntry\"/>"
+       "<placeholder name=\"CopyEntry\"/>"
+     "</menu>"
+     "<menu action=\"Go\">"
+@@ -161,7 +160,6 @@
+       "<menuitem action=\"ImageRotateCCW\"/>"
+       "<separator/>"
+       "<menuitem action=\"ImageCrop\"/>"
+-      "<placeholder name=\"WallpaperEntry\"/>"
+       "<placeholder name=\"CopyEntry\"/>"
+     "</menu>"
+     "<separator/>"
+@@ -196,7 +194,6 @@
+     "<menuitem action=\"ViewZoomOut\"/>"
+     "<menuitem action=\"ViewZoomNormal\"/>"
+     "<menuitem action=\"ViewZoomFit\"/>"
+-    "<placeholder name=\"WallpaperEntry\"/>"
+     "<placeholder name=\"CopyEntry\"/>"
+     "<separator/>"
+     "<menuitem name=\"MenuBar\" action=\"ViewMenuBar\"/>"
+@@ -213,32 +210,6 @@
+   "<accelerator name=\"DeleteAccel\" action=\"Delete\"/>"
+ "</ui>";
+ 
+-
+-const gchar *ui_definition_wallpaper = "<ui>"
+-  "<menubar name=\"MainMenu\">"
+-    "<menu action=\"Image\">"
+-      "<placeholder name=\"WallpaperEntry\">"
+-        "<separator/>"
+-        "<menuitem name=\"Wallpaper\" action=\"SetAsWallpaper\"/>"
+-      "</placeholder>"
+-    "</menu>"
+-  "</menubar>"
+-  "<popup name=\"ButtonMenu\">"
+-    "<menu action=\"Image\">"
+-      "<placeholder name=\"WallpaperEntry\">"
+-        "<separator/>"
+-        "<menuitem name=\"Wallpaper\" action=\"SetAsWallpaper\"/>"
+-      "</placeholder>"
+-    "</menu>"
+-  "</popup>"
+-  "<popup name=\"PopupMenu\">"
+-    "<placeholder name=\"WallpaperEntry\">"
+-      "<separator/>"
+-      "<menuitem action=\"SetAsWallpaper\"/>"
+-    "</placeholder>"
+-  "</popup>"
+-"</ui>";
+-
+ const gchar *ui_definition_copy = "<ui>"
+   "<menubar name=\"MainMenu\">"
+     "<menu action=\"Image\">"
+@@ -1501,92 +1472,6 @@
+ }
+ 
+ static void
+-vnr_set_wallpaper(GtkAction *action, VnrWindow *win)
+-{
+-    pid_t pid;
+-
+-    pid = fork();
+-
+-    if ( pid == 0 ) {
+-        gchar * tmp;
+-
+-        VnrPrefsDesktop desktop_environment = win->prefs->desktop;
+-
+-        if (desktop_environment == VNR_PREFS_DESKTOP_AUTO)
+-        {
+-            desktop_environment = uni_detect_desktop_environment();
+-        }
+-
+-        switch(desktop_environment) {
+-            case VNR_PREFS_DESKTOP_GNOME2:
+-                execlp("gconftool-2", "gconftool-2",
+-                        "--set", "/desktop/gnome/background/picture_filename",
+-                        "--type", "string",
+-                        VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_MATE:
+-                execlp("gsettings", "gsettings",
+-                        "set", "org.mate.background",
+-                        "picture-filename", VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_GNOME3:
+-                tmp = g_strdup_printf("file://%s", VNR_FILE(win->file_list->data)->path);
+-                execlp("gsettings", "gsettings",
+-                        "set", "org.gnome.desktop.background",
+-                        "picture-uri", tmp,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_XFCE:
+-                tmp = g_strdup_printf("/backdrop/screen%d/monitor0/workspace0/last-image",
+-                                        gdk_screen_get_number(gtk_widget_get_screen(GTK_WIDGET(win))));
+-                execlp("xfconf-query", "xfconf-query",
+-                        "-c", "xfce4-desktop",
+-                        "-p", tmp,
+-                        "--type", "string",
+-                        "--set",
+-                        VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_LXDE:
+-                execlp("pcmanfm", "pcmanfm",
+-                        "--set-wallpaper",
+-                        VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_PUPPY:
+-                execlp("set_bg", "set_bg",
+-                        VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_FLUXBOX:
+-                execlp("fbsetbg", "fbsetbg",
+-                        "-f", VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_NITROGEN:
+-                execlp("nitrogen", "nitrogen",
+-                        "--set-zoom-fill", "--save",
+-                        VNR_FILE(win->file_list->data)->path,
+-                        NULL);
+-                break;
+-            case VNR_PREFS_DESKTOP_CINNAMON:
+-                tmp = g_strdup_printf("file://%s", VNR_FILE(win->file_list->data)->path);
+-                execlp("gsettings", "gsettings",
+-                        "set", "org.cinnamon.desktop.background",
+-                        "picture-uri", tmp,
+-                        NULL);
+-                break;
+-            default:
+-                _exit(0);
+-        }
+-    } else {
+-        wait(NULL);
+-    }
+-}
+-
+-static void
+ vnr_copy_image(GtkAction *action, VnrWindow *win)
+ {
+     GdkPixbuf *view_pixbuf = uni_image_view_get_pixbuf(UNI_IMAGE_VIEW(win->view));
+@@ -1924,12 +1809,6 @@
+       G_CALLBACK (vnr_window_cmd_open_menu) },
+ };
+ 
+-static const GtkActionEntry action_entry_wallpaper[] = {
+-    { "SetAsWallpaper", NULL, N_("Set as _Wallpaper"), "<control>F8",
+-      N_("Set the selected image as the desktop background"),
+-      G_CALLBACK (vnr_set_wallpaper) },
+-};
+-
+ static const GtkActionEntry action_entry_copy_image[] = {
+     { "CopyImage", NULL, N_("Copy image to clipboard"), "<control>C",
+       N_("Copy the image to the clipboard"),
+@@ -2340,27 +2219,6 @@
+             g_error_free (error);
+     }
+ 
+-    window->action_wallpaper = gtk_action_group_new("ActionWallpaper");
+-
+-    gtk_action_group_set_translation_domain (window->action_wallpaper,
+-                                             GETTEXT_PACKAGE);
+-
+-    gtk_action_group_add_actions (window->action_wallpaper,
+-                                  action_entry_wallpaper,
+-                                  G_N_ELEMENTS (action_entry_wallpaper),
+-                                  window);
+-
+-    gtk_ui_manager_insert_action_group (window->ui_mngr,
+-                                        window->action_wallpaper, 0);
+-
+-    if (!gtk_ui_manager_add_ui_from_string (window->ui_mngr,
+-                                            ui_definition_wallpaper, -1,
+-                                            &error)) {
+-            g_error ("building menus failed: %s\n", error->message);
+-            g_error_free (error);
+-    }
+-    gtk_action_group_set_sensitive(window->action_wallpaper, FALSE);
+-
+     window->action_copy = gtk_action_group_new("ActionCopy");
+ 
+     gtk_action_group_set_translation_domain (window->action_copy,
+@@ -2558,7 +2416,6 @@
+     }
+ 
+     gtk_action_group_set_sensitive(window->actions_image, TRUE);
+-    gtk_action_group_set_sensitive(window->action_wallpaper, TRUE);
+     gtk_action_group_set_sensitive(window->action_copy, TRUE);
+ 
+     format = gdk_pixbuf_get_file_info (file->path, NULL, NULL);
+@@ -2678,7 +2535,6 @@
+     gtk_window_set_title (GTK_WINDOW (window), "Viewnior");
+     uni_anim_view_set_anim (UNI_ANIM_VIEW (window->view), NULL);
+     gtk_action_group_set_sensitive(window->actions_image, FALSE);
+-    gtk_action_group_set_sensitive(window->action_wallpaper, FALSE);
+     gtk_action_group_set_sensitive(window->action_copy, FALSE);
+     gtk_action_group_set_sensitive(window->actions_static_image, FALSE);
+ }

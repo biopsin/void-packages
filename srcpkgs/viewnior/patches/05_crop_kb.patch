@@ -1,0 +1,11 @@
+--- a/src/vnr-window.cc	2026-10-11 11:39:43.000000000 +0200
++++ b/src/vnr-window.c	2026-10-11 11:42:04.764231088 +0200
+@@ -1867,7 +1867,7 @@
+     { "ImageFlipHorizontal", "object-flip-horizontal", N_("Flip _Horizontal"), NULL,
+       N_("Flip image horizontally"),
+       G_CALLBACK (vnr_window_cmd_flip_horizontal) },
+-    { "ImageCrop", NULL, N_("Crop..."), NULL,
++    { "ImageCrop", NULL, N_("Crop..."), "<Alt>C",
+       N_("Crop"),
+       G_CALLBACK (vnr_window_cmd_crop) },
+ };
