@@ -1,0 +1,66 @@
+# Template file for 'Pale Moon'
+pkgname=palemoon
+version=35.0.3
+revision=1
+_uxpver=RB_20261027
+hostmakedepends="curl autoconf unzip zip pkg-config perl python3 yasm tar which nasm"
+makedepends="python3-devel gtk+3-devel libXt-devel alsa-lib-devel ffmpeg6-devel"
+depends="desktop-file-utils hicolor-icon-theme mime-types"
+short_desc="UXP-based web browser"
+maintainer="biopsin <biopsin@yahoo.no>"
+license="MPL-2.0, GPL-2.0-or-later, LGPL-2.1-or-later"
+homepage="https://www.palemoon.org"
+distfiles="https://repo.palemoon.org/MoonchildProductions/Pale-Moon/archive/${version}_Release.tar.gz
+ https://repo.palemoon.org/MoonchildProductions/UXP/archive/${_uxpver}.tar.gz"
+checksum="1b1a98bc802129d98e0c5cf78cfcdb8c89d8435d2eb3a17f8513271a989914ab
+ d4f359f15b8e44382eba7c1f03f71a586c34399af3872a606852cc8a5c56c985"
+python_version=2
+lib32disabled=yes
+patch_args="-Np1"
+
+post_extract() {
+	mv ${wrksrc}/pale-moon/* ${wrksrc}
+	rm -r ${wrksrc}/{pale-moon,platform}
+	mv uxp ${wrksrc}/platform
+}
+
+post_patch() {
+	cp "${FILESDIR}/mozconfig" "${wrksrc}/.mozconfig"
+}
+
+pre_configure() {
+	# Remove fuel
+	rm -r "${wrksrc}/palemoon/components/fuel"
+	vsed -i "12d" ${wrksrc}/palemoon/components/moz.build
+	echo "Fuel removed"
+}
+
+do_build() {
+	export CPPFLAGS="${CPPFLAGS} -O2 -Wno-format-overflow"
+	export LDFLAGS+=" -Wl,-rpath=/usr/lib/palemoon"
+	export MOZ_MAKE_FLAGS="${makejobs}"
+
+	#rm -f old-configure
+	./mach build
+}
+
+do_install() {
+	DESTDIR="$DESTDIR" ./mach install
+
+	for i in 16x16 32x32 48x48; do
+		vinstall ${wrksrc}/palemoon/branding/unofficial/default${i%x*}.png 644 \
+			usr/share/icons/hicolor/${i}/apps palemoon.png
+	done
+
+	vinstall ${wrksrc}/palemoon/branding/unofficial/newmoon.desktop 644 \
+		usr/share/applications palemoon.desktop
+
+	# https://bugzilla.mozilla.org/show_bug.cgi?id=658850
+	ln -sf ${PKGDESTDIR}/usr/bin/palemoon palemoon-bin
+	ln -sf palemoon ${PKGDESTDIR}/usr/lib/palemoon/palemoon-bin
+
+	# Remove the devel and etc
+	rm -r ${DESTDIR}/usr/{include,lib/palemoon-devel,share/idl}
+	rm -r ${DESTDIR}/usr/lib/palemoon/browser/{defaults,icons,searchplugins}
+	rm ${DESTDIR}/usr/lib/palemoon/run-mozilla.sh
+}
